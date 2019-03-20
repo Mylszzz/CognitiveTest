@@ -1,6 +1,7 @@
 package com.example.a12109.cognitivetest;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -19,12 +21,14 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     private ImageView sketchpad;
+    private Button chat;
     private Bitmap copyBitmap;
     private Paint paint;
     private Canvas canvas;
     private float startX;
     private float startY;
     private int seq = 1;
+
     // The available colours
     private int startColour = 0xff0000;
     private int endColour = 0xff9900;
@@ -41,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         sketchpad = (ImageView) findViewById(R.id.sketchpad);
+        chat = (Button) findViewById(R.id.chat);
+
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.white_background);
         copyBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
         // Create a pen instance
@@ -63,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "drawing!");
                         startX = event.getX();
                         startY = event.getY();
+                        canvas.drawPoint(startX, startY, paint);
+                        sketchpad.setImageBitmap(copyBitmap);
                         showToast("drawing on: ("+Float.toString(startX)+", "+
                                 Float.toString(startY)+")"+"seq: "+seq);
                         break;
@@ -92,6 +100,14 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
                 return true;
+            }
+        });
+
+        chat.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this, Chat.class);
+                startActivity(intent);
             }
         });
 
